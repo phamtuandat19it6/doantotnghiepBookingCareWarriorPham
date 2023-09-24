@@ -2,7 +2,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('histories', {
-  
+
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -16,6 +16,9 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       description: {
+        type: Sequelize.TEXT
+      },
+      files: {
         type: Sequelize.TEXT
       },
       createdAt: {
