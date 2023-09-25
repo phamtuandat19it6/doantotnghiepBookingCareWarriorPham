@@ -13,6 +13,7 @@
   td {
     border: 1px solid black;
     border-collapse: collapse;
+
   }
 </style>
 
@@ -26,6 +27,7 @@
       <th>First name</th>
       <th>Last name</th>
       <th>Address</th>
+      <th>Action</th>
     </tr>
 
     <% for(let i=0; i < dataTable.length; i++){%>
@@ -42,8 +44,13 @@
         <td>
           <%= dataTable[i].address %>
         </td>
+        <td>
+          <a href="/edit-crud?id=<%= dataTable[i].id %>" class="btn-edit" type="button">edit</a>
+          <a href="/delete-crud?id=<%= dataTable[i].id %>" class="btn-delete" type="button">delete</a>
+        </td>
+
       </tr>
-      <%}%>
+    <%}%>
   </table>
 </body>
 
