@@ -6,16 +6,10 @@ let handleUserLogin =  (email, password) => {
             let userData = {};
             let isExist = await checkUserEmail(email);
             if (isExist) {
-                // const myPlaintextPassword = 's0/\/\P4$$w0rD';
-                // const someOtherPlaintextPassword = 'not_bacon';
-                // bcrypt.compareSync(myPlaintextPassword, hash);
-                // bcrypt.compareSync(someOtherPlaintextPassword, hash);
                 let user = await db.User.findOne({
                     attributes: ['email','roleId','password'],
                     where: { email: email },
                     raw:true
-
-
                 })
                 if (user) {
                     let check = await bcrypt.compareSync(password, user.password);
@@ -60,7 +54,34 @@ let checkUserEmail = (userEmail) => {
         }
     })
 }
+let getAllUsers = (userId) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let users = '';
+            if (userId === 'ALL') {
+                users = await db.User.findAll({
+                    attributes: {
+                        exclude:['password']
+                    }
+            })
+            }
+
+            if (userId && userId !== 'ALL') {
+                users = await db.User.findOne({
+                where: { id: userId },
+                attributes: {
+                    exclude:['password']
+                }
+                })
+            }
+            resolve(users)
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
 module.exports = {
     handleUserLogin: handleUserLogin,
+    getAllUsers:getAllUsers
 
 }
