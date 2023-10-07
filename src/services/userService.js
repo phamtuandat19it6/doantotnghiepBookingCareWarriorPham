@@ -149,6 +149,7 @@ let deleteUser = (userId) =>{
 let updateUserData = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log('check nodejs data',data)
             if (!data.id) {
                 resolve({
                     errCode: 2,
@@ -183,11 +184,36 @@ let updateUserData = (data) => {
         }
     })
 }
+let getAllCodeService = (typeInput)=>{
+    return new Promise(async(resolve,reject)=>{
+     try {
+        if(!typeInput){
+            resolve({
+                errCode:1,
+                errMessage:'Missing required parameters !'
+            })
+        }else{
+            let res = {};
+            let allcode = await db.Allcode.findAll({
+                where: { type : typeInput}
+            });
+            res.errCode = 0;
+            res.data = allcode;
+            resolve (res)
+        }
+
+
+     } catch (error) {
+        reject(error);
+     }
+    })
+}
 module.exports = {
     handleUserLogin: handleUserLogin,
     getAllUsers: getAllUsers,
     createNewUser: createNewUser,
     deleteUser: deleteUser,
-    updateUserData:updateUserData
+    updateUserData:updateUserData,
+    getAllCodeService:getAllCodeService
 
 }
