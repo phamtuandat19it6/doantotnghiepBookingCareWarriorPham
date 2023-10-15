@@ -97,7 +97,7 @@ let getAllUsers = (userId) => {
         }
     })
 }
-let createNewUser = (data) => {
+let createNewUser = async (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             let check = await checkUserEmail(data.email);
@@ -211,19 +211,22 @@ let getAllCodeService = (typeInput)=>{
             res.data = allcode;
             resolve (res)
         }
-
-
      } catch (error) {
         reject(error);
      }
     })
 }
+
+
+
+
 module.exports = {
     handleUserLogin: handleUserLogin,
     getAllUsers: getAllUsers,
     createNewUser: createNewUser,
     deleteUser: deleteUser,
     updateUserData:updateUserData,
-    getAllCodeService:getAllCodeService
+    getAllCodeService:getAllCodeService,
+
 
 }
