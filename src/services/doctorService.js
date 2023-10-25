@@ -110,7 +110,6 @@ let getDetailDoctorById = async(inputId) =>{
                         {
                             model: db.Markdown,
                             attributes:['description','contentHTML','contentMarkdown'],
-
                         },
                         {
                             model:db.Allcode, as:'positionData',attributes:['valueEn','valueVi']
@@ -151,22 +150,17 @@ let bulkCreateSchedule = (data)=>{
                         return item;
                     })
                 }
+                //get all existing data
                 let existing = await db.Schedule.findAll(
                     {
                         where:{ doctorId:data.doctorId, date:data.formatedDate},
                         attributes:['timeType','date','doctorId','maxNumber'],
                         raw:true
-
                     }
                 );
-                if(existing && existing.length > 0){
-                    existing = existing.map(item => {
-                        item.date = new Date(item.date ).getTime();
-                        return item;
-                    })
-                }
+                //compare different
                 let toCreate = _.differenceWith(schedule,existing,(a,b)=>{
-                    return a.timeType === b.timeType && a.date === b.date;
+                    return a.timeType === b.timeType && +a.date === +b.date;
                 });
 
                 if(toCreate && toCreate.length > 0){
@@ -184,7 +178,6 @@ let bulkCreateSchedule = (data)=>{
             reject(error);
         }
     })
-
 }
 let getScheduleDoctorByDate = (doctorId,date) =>{
     return new Promise (async(resolve,reject)=>{
@@ -199,7 +192,14 @@ let getScheduleDoctorByDate = (doctorId,date) =>{
                 where:{
                     doctorId:doctorId,
                     date:date
-                }
+                },
+                include:[
+                    {
+                        model:db.Allcode, as:'timeTypeData',attributes:['valueEn','valueVi']
+                    },
+                ],
+                raw:false,
+                nest:true,
             })
             if(!dataSchedule) dataSchedule=[];
             resolve({
