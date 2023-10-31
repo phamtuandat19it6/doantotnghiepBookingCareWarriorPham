@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull:false
       },
-      paymetId: {
+      paymentId: {
         type: Sequelize.STRING,
         allowNull:false
       },
