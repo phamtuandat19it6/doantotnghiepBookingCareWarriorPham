@@ -105,7 +105,7 @@ let saveDetailInforDoctor = async (inputData) => {
                     doctorInfor.addressClinic = inputData.addressClinic;
                     doctorInfor.note = inputData.note;
 
-                    await db.Doctor_Infor.save()
+                    await doctorInfor.save()
                 }else{
                     await db.Doctor_Infor.create({
                         doctorId: inputData.doctorId,
@@ -262,6 +262,43 @@ let getScheduleDoctorByDate = (doctorId,date) =>{
        }
     })
 }
+
+let getExtraInforDoctorById = (idInput) =>{
+    return new Promise (async(resolve,reject)=>{
+        try {
+         if(!idInput){
+             resolve({
+                 errCode:-1,
+                 errMessage:'Missing required parameters !'
+             })
+         }else{
+             let dataDoctorInfor = await db.Doctor_Infor.findOne({
+                 where:{
+                     doctorId:idInput,
+                 },
+                 model: db.Doctor_Infor,
+                 attributes:{
+                     exclude:['id','doctorId']
+                 },
+                 include:[
+                     {model:db.Allcode, as:'priceData',attributes:['valueEn','valueVi']},
+                     {model:db.Allcode, as:'provinceData',attributes:['valueEn','valueVi']},
+                     {model:db.Allcode, as:'paymentData',attributes:['valueEn','valueVi']},
+                 ],
+                 raw:false,
+                 nest:true,
+             })
+             if(!dataDoctorInfor) dataDoctorInfor={};
+             resolve({
+                 errCode:0,
+                 data:dataDoctorInfor
+             })
+         }
+        }catch (error) {
+             reject(error)
+        }
+     })
+}
 module.exports = {
     getTopDoctorHome:getTopDoctorHome,
     getAllDoctors:getAllDoctors,
@@ -269,6 +306,7 @@ module.exports = {
     getDetailDoctorById:getDetailDoctorById,
     bulkCreateSchedule:bulkCreateSchedule,
     getScheduleDoctorByDate:getScheduleDoctorByDate,
+    getExtraInforDoctorById:getExtraInforDoctorById
 
 
 
