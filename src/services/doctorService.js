@@ -297,7 +297,63 @@ let getExtraInforDoctorById = (idInput) =>{
         }catch (error) {
              reject(error)
         }
-     })
+    })
+}
+let  getProfileDoctorById = (doctorId) =>{
+    return new Promise (async(resolve,reject)=>{
+        try {
+         if(!doctorId){
+             resolve({
+                 errCode:-1,
+                 errMessage:'Missing required parameters !'
+             })
+         }else{
+             let dataProfile = await db.User.findOne({
+                where:{
+                    id:doctorId
+                },
+                attributes:{
+                    exclude:['password']
+                },
+                include:[
+
+                    {
+                        model:db.Markdown,
+                        attributes:['description','contentHTML','contentMarkdown']
+                    },
+                    {
+                        model:db.Allcode, as:'positionData',attributes:['valueEn','valueVi']
+                    },
+                    {
+                        model: db.Doctor_Infor,
+                        attributes:{
+                            exclude:['id','doctorId']
+                        },
+                        include:[
+                            {model:db.Allcode, as:'priceData',attributes:['valueEn','valueVi']},
+                            {model:db.Allcode, as:'provinceData',attributes:['valueEn','valueVi']},
+                            {model:db.Allcode, as:'paymentData',attributes:['valueEn','valueVi']},
+                        ]
+                    },
+                ],
+                raw:false,
+                nest:true,
+            })
+            if(dataProfile && dataProfile.image){
+                dataProfile.image = new Buffer(dataProfile.image,'base64').toString('binary');
+            }
+            if(!dataProfile){
+                dataProfile ={};
+            }
+            resolve({
+                errCode:0,
+                data:dataProfile
+            })
+        }
+    } catch (error) {
+        reject(error)
+    }
+})
 }
 module.exports = {
     getTopDoctorHome:getTopDoctorHome,
@@ -306,7 +362,8 @@ module.exports = {
     getDetailDoctorById:getDetailDoctorById,
     bulkCreateSchedule:bulkCreateSchedule,
     getScheduleDoctorByDate:getScheduleDoctorByDate,
-    getExtraInforDoctorById:getExtraInforDoctorById
+    getExtraInforDoctorById:getExtraInforDoctorById,
+    getProfileDoctorById:getProfileDoctorById,
 
 
 
