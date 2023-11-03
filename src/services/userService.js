@@ -172,7 +172,6 @@ let updateUserData = (data) => {
                 user.gender = data.gender;
                 user.phonenumber = data.phonenumber;
                 if(data.avatar){
-
                     user.image = data.avatar;
                 }
 
