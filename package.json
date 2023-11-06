@@ -17,7 +17,8 @@
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "lodash": "^4.17.21",
-    "mysql2": "^3.6.1"
+    "mysql2": "^3.6.1",
+    "nodemailer": "6.9.7"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
