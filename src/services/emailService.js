@@ -17,21 +17,45 @@ let sendSimpleEmail = async(dataSend)=>{
         from: '"Warrior Pham 👻" <onganh361@gmail.com>', // sender address
         to: dataSend.receivers, // list of receivers
         subject: "Thông tin đặt lịch khám bệnh ✔", // Subject line
-        html:`
-        <h3>Xin chào ${dataSend.patientName}!</h3>
-        <p>Bạn nhận được email này vì đã đặt lịch khám bệnh trên  hệ thông Booking care</p>
-        <p>Thông tin đặt lịch khám bệnh:</p>
-        <div><b>Thời gian: ${dataSend.time}</b></div>
-        <div><b>Bác sĩ: ${dataSend.doctorName}</b></div>
-        <p> Nếu các thông tin trên là đúng sự thật, vui lòng click vào đường link bên dưới để
-            xác nhận và hoàn tất thủ tục khám bệnh.
-        </p>
-        <div>
-            <a href=${dataSend.redirectLink} target="_blank"> click here </a>
-        </div>
-        <div>Xin chân thành cảm ơn</div>
-        `, // html body
+        html:getBodyHTMLEmail(dataSend),
       });
+}
+
+let getBodyHTMLEmail = (dataSend)=>{
+    let result = ''
+    if(dataSend.language === 'vi'){
+      result = `
+      <h3>Xin chào ${dataSend.patientName}!</h3>
+      <p>Bạn nhận được email này vì đã đặt lịch khám bệnh trên  hệ thông Booking care</p>
+      <p>Thông tin đặt lịch khám bệnh:</p>
+      <div><b>Thời gian: ${dataSend.time}</b></div>
+      <div><b>Bác sĩ: ${dataSend.doctorName}</b></div>
+      <p> Nếu các thông tin trên là đúng sự thật, vui lòng click vào đường link bên dưới để
+          xác nhận và hoàn tất thủ tục khám bệnh.
+      </p>
+      <div>
+          <a href=${dataSend.redirectLink} target="_blank"> click here </a>
+      </div>
+      <div>Xin chân thành cảm ơn</div>
+      `
+    }
+    if(dataSend.language === 'en'){
+      result = `
+      <h3>Hi ${dataSend.patientName}!</h3>
+      <p>You received this email because you booked a medical appointment on the Booking care system</p>
+      <p>Medical appointment booking information:</p>
+      <div><b>Time: ${dataSend.time}</b></div>
+      <div><b>Doctor: ${dataSend.doctorName}</b></div>
+      <p> If the above information is true, please click on the link below
+      Confirm and complete medical examination procedures.
+      </p>
+      <div>
+          <a href=${dataSend.redirectLink} target="_blank"> click here </a>
+      </div>
+      <div>Sincerely thank !</div>
+      `
+    }
+    return result
 }
 module.exports = {
     sendSimpleEmail:sendSimpleEmail

@@ -2,20 +2,22 @@ import db from "../models/index";
 require('dotenv').config();
 import emailService from './emailService'
 
-let savePatientInfor = async (data) => {
+let savePatientInfor = (data) => {
     return new Promise(async(resolve, reject) => {
         try {
-            if (!data.email || !data.doctorId || !data.date || !data.timeType) {
+            if (!data.email || !data.doctorId || !data.date || !data.timeType || !data.fullName) {
                 resolve({
                     errCode: 1,
                     errMessage:'Missing parameters'
                 })
             } else {
+
                 await emailService.sendSimpleEmail({
                     receivers: data.email,
-                    patientName:'Warrior Pham',
-                    time: '8:00 - 9:00 Chủ Nhật 11/6/2021',
-                    doctorName:'Vũ Hồng Linh',
+                    patientName:data.fullName,
+                    time: data.timeString,
+                    doctorName: data.doctorName,
+                    language:data.language,
                     redirectLink:'https://www.youtube.com/watch?v=0GL--Adfqhc&list=PLncHg6Kn2JT6E38Z3kit9Hnif1xC_9VqI&index=98'
 
                 })
