@@ -84,7 +84,7 @@ let saveDetailInforDoctor = async (inputData) => {
                         doctorMardown.contentMarkdown = inputData.contentMarkdown;
                         doctorMardown.description = inputData.description;
                         doctorMardown.doctorId = inputData.doctorId;
-                        doctorMardown.updateAt = new Date();
+
 
                         await doctorMardown.save()
                     }
