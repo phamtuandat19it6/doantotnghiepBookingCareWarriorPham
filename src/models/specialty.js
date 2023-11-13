@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Speciaty.hasOne(models.Doctor_Infor,{foreignKey:'specialtyId',as:'specialtyData'})
     }
   };
   Speciaty.init({
