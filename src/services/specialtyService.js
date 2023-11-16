@@ -63,8 +63,11 @@ let getDetailSpecialtyById = (inputId, location) =>{
                     where:{
                         id:inputId
                     },
-                    attributes:['descriptionHTML','descriptionMarkdown']
+                    attributes:['descriptionHTML','descriptionMarkdown','image']
                 })
+                if(data && data.image){
+                    data.image = new Buffer(data.image,'base64').toString('binary');
+                }
                 if(data){
                     let doctorSpecialty=[];
                     if(location === 'ALL'){
@@ -89,7 +92,7 @@ let getDetailSpecialtyById = (inputId, location) =>{
                 resolve({
                     errCode:0,
                     errMessage:"ok",
-                    data
+                    data:data
                 })
 
             }
