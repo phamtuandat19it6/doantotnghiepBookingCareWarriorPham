@@ -88,17 +88,12 @@ let getDetailSpecialtyById = (inputId, location) =>{
                     }
                     data.doctorSpecialty = doctorSpecialty
                 }else data = {}
-
                 resolve({
                     errCode:0,
                     errMessage:"ok",
                     data:data
                 })
-
             }
-
-
-
         } catch (error) {
             reject(error)
         }
