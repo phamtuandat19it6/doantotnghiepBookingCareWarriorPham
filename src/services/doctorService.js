@@ -91,8 +91,6 @@ let saveDetailInforDoctor = async (inputData) => {
                         doctorMardown.contentMarkdown = inputData.contentMarkdown;
                         doctorMardown.description = inputData.description;
                         doctorMardown.doctorId = inputData.doctorId;
-
-
                         await doctorMardown.save()
                     }
                 }
@@ -112,7 +110,7 @@ let saveDetailInforDoctor = async (inputData) => {
                     doctorInfor.addressClinic = inputData.addressClinic;
                     doctorInfor.note = inputData.note;
                     doctorInfor.specialtyId = inputData.selectSpecialty;
-                    doctorInfor.clinicId = inputData.clinicId;
+                    doctorInfor.clinicId = inputData.selectClinic;
                     await doctorInfor.save()
                 }else{
                     await db.Doctor_Infor.create({
