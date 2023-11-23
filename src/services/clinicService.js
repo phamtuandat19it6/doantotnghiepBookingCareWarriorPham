@@ -189,6 +189,14 @@ let getDetailClinicById = (inputId) =>{
                     },
                     attributes:['descriptionHTML','descriptionMarkdown','image','imageBackground','name','address']
                 })
+                if(data){
+                    let doctorClinic = [];
+                    doctorClinic = await db.Doctor_Infor.findAll({
+                        where:{clinicId:inputId},
+                        attributes:['doctorId','provinceId']
+                    })
+                    data.doctorClinic = doctorClinic
+                }else data = {}
                 if(data && data.image && data.imageBackground){
                     data.image = new Buffer(data.image,'base64').toString('binary');
                     data.imageBackground = new Buffer(data.imageBackground,'base64').toString('binary');
