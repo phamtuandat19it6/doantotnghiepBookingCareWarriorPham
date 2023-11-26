@@ -11,7 +11,15 @@ let builUrlEmail = (doctorId,token)=>{
 let savePatientInfor = (data) => {
     return new Promise(async(resolve, reject) => {
         try {
-            if (!data.email || !data.doctorId || !data.date || !data.timeType || !data.fullName) {
+            if (!data.email
+                || !data.doctorId
+                || !data.date
+                || !data.timeType
+                || !data.fullName
+                || !data.selectedGender
+                || !data.address
+                || !data.phoneNumber
+                ) {
                 resolve({
                     errCode: 1,
                     errMessage:'Missing parameters'
@@ -32,7 +40,11 @@ let savePatientInfor = (data) => {
                     raw: false,
                     defaults:{
                         email:data.email,
-                        roleId:'R3'
+                        roleId:'R3',
+                        gender:data.selectedGender,
+                        address:data.address,
+                        firstName:data.fullName,
+                        phonenumber:data.phoneNumber
                     },
                 });
 

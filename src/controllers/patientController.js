@@ -27,5 +27,6 @@ let verifyPatientBookingInfor = async(req,res) => {
 
 module.exports = {
     postPatientInfor:postPatientInfor,
-    verifyPatientBookingInfor:verifyPatientBookingInfor
+    verifyPatientBookingInfor:verifyPatientBookingInfor,
+
 }
