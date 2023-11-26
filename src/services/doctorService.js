@@ -372,7 +372,7 @@ let getListPatientForDoctor =(doctorId,date)=>{
         try {
             if(!doctorId || !date){
                 resolve({
-                    errCode:-1,
+                    errCode:1,
                     errMessage:'Missing required parameters !'
                 })
             }else{
@@ -391,6 +391,9 @@ let getListPatientForDoctor =(doctorId,date)=>{
                                 attributes:['valueEn','valueVi'],}
                             ]
                         },
+                        {
+                            model:db.Allcode, as:'timeTypeDataPatient', attributes:['valueVi','ValueEn']
+                        }
                     ],
                     raw:false,
                     nest:true
