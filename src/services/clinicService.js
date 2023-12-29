@@ -1,48 +1,48 @@
 import db from "../models/index";
-let createClinic =(data)=>{
-    return new Promise(async(resolve,reject)=>{
+let createClinic = (data) => {
+    return new Promise(async (resolve, reject) => {
 
         try {
-            if(!data.name || !data.address
+            if (!data.name || !data.address
                 || !data.imageBase64
                 || !data.imageBackground
                 || !data.descriptionMarkdown
-                || !data.descriptionHTML){
-                    resolve({
-                        errCode:1,
-                        errMessage:'missing parameter'
+                || !data.descriptionHTML) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'missing parameter'
+                })
+            } else {
+                if (data.action === 'CREATE') {
+                    await db.Clinic.create({
+                        name: data.name,
+                        address: data.address,
+                        imageBackground: data.imageBackground,
+                        image: data.imageBase64,
+                        descriptionHTML: data.descriptionHTML,
+                        descriptionMarkdown: data.descriptionMarkdown
                     })
-                }else{
-                    if(data.action ==='CREATE'){
-                        await db.Clinic.create({
-                            name:data.name,
-                            address:data.address,
-                            imageBackground:data.imageBackground,
-                            image:data.imageBase64,
-                            descriptionHTML:data.descriptionHTML,
-                            descriptionMarkdown:data.descriptionMarkdown
-                        })
-                    }else if(data.action ==='EDIT'){
-                        let clinicUpdate =  await db.Clinic.findOne({
-                            where: {id: data.clinicId},
-                            raw:false
-                        })
-                        if(clinicUpdate){
-                            clinicUpdate.name = data.name;
-                            clinicUpdate.address = data.address;
-                            clinicUpdate.imageBackground = data.imageBackground;
-                            clinicUpdate.image = data.imageBase64;
-                            clinicUpdate.descriptionHTML = data.descriptionHTML;
-                            clinicUpdate.descriptionMarkdown = data.descriptionMarkdown;
-                            clinicUpdate.id = data.clinicId;
-                            await clinicUpdate.save()
-                        }
+                } else if (data.action === 'EDIT') {
+                    let clinicUpdate = await db.Clinic.findOne({
+                        where: { id: data.clinicId },
+                        raw: false
+                    })
+                    if (clinicUpdate) {
+                        clinicUpdate.name = data.name;
+                        clinicUpdate.address = data.address;
+                        clinicUpdate.imageBackground = data.imageBackground;
+                        clinicUpdate.image = data.imageBase64;
+                        clinicUpdate.descriptionHTML = data.descriptionHTML;
+                        clinicUpdate.descriptionMarkdown = data.descriptionMarkdown;
+                        clinicUpdate.id = data.clinicId;
+                        await clinicUpdate.save()
                     }
-                    resolve({
-                        errCode:0,
-                        errMessage:'OK'
-                    })
                 }
+                resolve({
+                    errCode: 0,
+                    errMessage: 'OK'
+                })
+            }
         } catch (error) {
             reject(error)
         }
@@ -119,30 +119,30 @@ let createClinic =(data)=>{
 //         }
 //     })
 // }
-let handleDeleteClinic = (clinicId) =>{
+let handleDeleteClinic = (clinicId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if(!clinicId){
+            if (!clinicId) {
                 resolve({
-                    errCode:1,
-                    errMessage:'missing parameter'
+                    errCode: 1,
+                    errMessage: 'missing parameter'
                 })
-            }else{
+            } else {
                 let clinic = await db.Clinic.findOne({
-                    where:{id: clinicId}
+                    where: { id: clinicId }
                 })
                 if (!clinic) {
                     resolve({
                         errCode: 2,
-                        errMessage:`The Clinic isn't exist`
+                        errMessage: `The Clinic isn't exist`
                     })
                 }
                 await db.Clinic.destroy({
-                    where: { id: clinicId}
+                    where: { id: clinicId }
                 })
                 resolve({
                     errCode: 0,
-                    message:`The Clinic is deleted`
+                    message: `The Clinic is deleted`
                 })
             }
         } catch (error) {
@@ -150,23 +150,23 @@ let handleDeleteClinic = (clinicId) =>{
         }
     })
 }
-let getAllClinic = () =>{
-    return new Promise(async(resolve,reject)=>{
+let getAllClinic = () => {
+    return new Promise(async (resolve, reject) => {
         try {
             let clinic = await db.Clinic.findAll({
-                order:[[ "createdAt","DESC"]],
-             })
-            if(clinic && clinic.length > 0){
-                clinic.map(item =>{
-                    item.image = new Buffer(item.image,'base64').toString('binary')
-                    item.imageBackground = new Buffer(item.imageBackground,'base64').toString('binary')
+                order: [["createdAt", "DESC"]],
+            })
+            if (clinic && clinic.length > 0) {
+                clinic.map(item => {
+                    item.image = Buffer.from(item.image, 'base64').toString('binary')
+                    item.imageBackground = Buffer.from(item.imageBackground, 'base64').toString('binary')
                     return item;
                 })
             }
             resolve({
-                errCode:0,
-                errMessage:'ok',
-                data:clinic
+                errCode: 0,
+                errMessage: 'ok',
+                data: clinic
             })
         } catch (error) {
             reject(error)
@@ -174,38 +174,38 @@ let getAllClinic = () =>{
     })
 }
 
-let getDetailClinicById = (inputId) =>{
-    return new Promise(async(resolve,reject)=>{
+let getDetailClinicById = (inputId) => {
+    return new Promise(async (resolve, reject) => {
         try {
-            if(!inputId ){
+            if (!inputId) {
                 resolve({
-                    errCode:1,
-                    errMessage:'missing parameter'
+                    errCode: 1,
+                    errMessage: 'missing parameter'
                 })
-            }else{
-                let  data = await db.Clinic.findOne({
-                    where:{
-                        id:inputId
+            } else {
+                let data = await db.Clinic.findOne({
+                    where: {
+                        id: inputId
                     },
-                    attributes:['descriptionHTML','descriptionMarkdown','image','imageBackground','name','address']
+                    attributes: ['descriptionHTML', 'descriptionMarkdown', 'image', 'imageBackground', 'name', 'address']
                 })
-                if(data){
+                if (data) {
                     let doctorClinic = [];
                     doctorClinic = await db.Doctor_Infor.findAll({
-                        where:{clinicId:inputId},
-                        attributes:['doctorId','provinceId']
+                        where: { clinicId: inputId },
+                        attributes: ['doctorId', 'provinceId']
                     })
                     data.doctorClinic = doctorClinic
-                }else data = {}
-                if(data && data.image && data.imageBackground){
-                    data.image = new Buffer(data.image,'base64').toString('binary');
-                    data.imageBackground = new Buffer(data.imageBackground,'base64').toString('binary');
+                } else data = {}
+                if (data && data.image && data.imageBackground) {
+                    data.image = Buffer.from(data.image, 'base64').toString('binary');
+                    data.imageBackground = Buffer.from(data.imageBackground, 'base64').toString('binary');
                 }
 
                 resolve({
-                    errCode:0,
-                    errMessage:"ok",
-                    data:data
+                    errCode: 0,
+                    errMessage: "ok",
+                    data: data
                 })
             }
         } catch (error) {
@@ -213,9 +213,9 @@ let getDetailClinicById = (inputId) =>{
         }
     })
 }
-module.exports={
-    createClinic:createClinic,
-    getAllClinic:getAllClinic,
-    getDetailClinicById:getDetailClinicById,
+module.exports = {
+    createClinic: createClinic,
+    getAllClinic: getAllClinic,
+    getDetailClinicById: getDetailClinicById,
     handleDeleteClinic
 }
